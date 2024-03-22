@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Image} from 'react-native';
+import { StyleSheet, View} from 'react-native';
 
 import Button from './components/Button';
 import ImageViewer from './components/ImageViewer';
@@ -13,7 +13,7 @@ export default function App() {
          < ImageViewer placeholderImageSource={Image1}/>
         </View>
         <View style={styles.footerContainer}>
-          <Button label="Escolha uma foto"/>
+          <Button theme="primary" label="Escolha uma foto"/>
           <Button label="Use essa foto"/>
         </View>
       <StatusBar style="auto" />
