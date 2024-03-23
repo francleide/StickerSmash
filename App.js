@@ -5,10 +5,18 @@ import { StyleSheet, View} from 'react-native';
 import Button from './components/Button';
 import ImageViewer from './components/ImageViewer';
 import * as ImagePicker from 'expo-image-picker';
+import CircleButton from './components/CircleButton';
+import IconButton from './components/IconButton';
+import EmojiPicker from './components/EmojiPicker';
+import EmojiList from './components/EmojiList';
+import EmojiSticker from './components/EmojiSticker';
 
-const Image1 = require('./assets/imagens/background-image.png');
+const Image1 = require('./assets/images/background-image.png');
 
 export default function App() {
+  const [pickedEmoji, setPickedEmoji] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showAppOptions, setShowAppOptions] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImageAsync = async() => {
@@ -19,10 +27,28 @@ export default function App() {
 
     if (!result.canceled){
       setSelectedImage(result.assets[0].uri);
+      setShowAppOptions(true);
     } else{
       alert('Você não selecionou nenhuma imagem.');
     }
   };
+
+  const onReset = () =>{
+    setShowAppOptions(false);
+  };
+
+  const onAddSticker = () =>{
+    setIsModalVisible(true);
+  };
+
+  const onSaveImageAsync = async () =>{
+    
+  };
+
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style ={styles.imageContainer}>
@@ -30,11 +56,25 @@ export default function App() {
          placeholderImageSource={Image1}
          selectedImage={selectedImage} //URI da imagem selecionada para a função imageviewer
          />
+          {pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
         </View>
+        {showAppOptions ? (
+          <View style={styles.optionsContainer}>
+           <View style={styles.optionsRow}>
+             <IconButton icon="refresh" label="Reset" onPress={onReset} />
+             <CircleButton onPress={onAddSticker} />
+             <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
+           </View>
+         </View>
+        ) : ( 
         <View style={styles.footerContainer}>
           <Button theme="primary" label="Escolha uma foto" onPress={pickImageAsync}/>
-          <Button label="Use essa foto"/>
+          <Button label="Use essa foto"  onPress={() => setShowAppOptions(true)}  />
         </View>
+        )}
+      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
+        <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
+      </EmojiPicker>
       <StatusBar style="auto" />
     </View>
   );
@@ -60,4 +100,12 @@ const styles = StyleSheet.create({
     height: 440,
     borderRadius: 18,
   },*/
+  optionsContainer: {
+    position: 'absolute',
+    bottom: 80,
+  },
+  optionsRow: {
+    slignItems: 'center',
+    flexDirection: 'row',
+  },
 });
